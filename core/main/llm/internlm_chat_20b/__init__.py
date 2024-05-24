@@ -4,7 +4,7 @@ import torch
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 
-from ottawa.core.main.llm import LLM
+from core.main.llm import LLM
 
 
 class InternLMChat20B(LLM):
