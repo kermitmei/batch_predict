@@ -1,6 +1,6 @@
 import importlib
 
-from core.main import logger
+from llmbase.main import logger
 
 
 class LLM(object):
@@ -10,6 +10,6 @@ class LLM(object):
         if llm_config is None or llm_config.get('class') is None:
             logger.error('预训练大模型初始化错误')
             raise Exception("PRETRAINED MODEL ERROR")
-        module = importlib.import_module('core.main.llm')
+        module = importlib.import_module('llmbase.main.llm')
         cls = getattr(module, llm_config.get('class'))
         return cls

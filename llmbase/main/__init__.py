@@ -5,9 +5,9 @@ import nacos
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 
-from core.main.common.god import cosmos
-from core.main.common.tool.logger import init_logger, logger
-from core.main.routers import openai
+from llmbase.main.common.god import cosmos
+from llmbase.main.common.tool.logger import init_logger, logger
+from llmbase.main.routers import openai
 
 
 @asynccontextmanager
@@ -43,7 +43,7 @@ def get_asgi_app(config) -> FastAPI:
 
     # 预训练大模型
     try:
-        from core.main.llm import LLM
+        from llmbase.main.llm import LLM
         _llm_class = LLM.get_pretrained_class(llm_config=config.LLM_CONFIG)
         cosmos.llm = _llm_class(pretrained_model_name_or_path=config.LLM_CONFIG.get('pretrained_model_path'),
                                 embedding_model_path=config.LLM_CONFIG.get('embedding_model_path'),

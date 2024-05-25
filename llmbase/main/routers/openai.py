@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Response
 
-from core.main.llm.chatglm3.model import (EmbeddingResponse, EmbeddingRequest, ModelList,
-                                          ChatCompletionResponse, ChatCompletionRequest)
-from core.main.services.chatglm3_service import ChatGLM3Service
+from llmbase.main.llm.chatglm3.model import (EmbeddingResponse, EmbeddingRequest, ModelList,
+                                             ChatCompletionResponse, ChatCompletionRequest)
+from llmbase.main.services.chatglm3_service import ChatGLM3Service
 
 router = APIRouter(prefix="/v1")
 

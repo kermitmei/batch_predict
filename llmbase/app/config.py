@@ -31,7 +31,7 @@ class Config(StarletteConfig):
 
     # LLM配置
     LLM_CONFIG = {
-        'class': 'ChatGLM3',
+        'class': 'chatglm3',
         'pretrained_model_path': '/var/guoxin2023/fastapi/app/llm/chatglm3-6b-32k',
         'cuda_devices': '0'
     }

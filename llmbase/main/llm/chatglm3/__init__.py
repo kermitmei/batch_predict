@@ -5,7 +5,7 @@ from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer
 
-from core.main.llm import LLM
+from llmbase.main.llm import LLM
 
 
 class ChatGLM3(LLM):

@@ -4,13 +4,13 @@ import tiktoken
 from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
 
-from core.main.common.god import cosmos
-from core.main.common.tool.logger import logger
-from core.main.llm.chatglm3.model import (EmbeddingRequest, CompletionUsage, ModelCard, ModelList,
-                                          ChatCompletionRequest, FunctionCallResponse, ChatMessage,
-                                          ChatCompletionResponseChoice, UsageInfo, ChatCompletionResponse,
-                                          ChatCompletionResponseStreamChoice, DeltaMessage)
-from core.main.llm.chatglm3.utils import process_response, generate_chatglm3, generate_stream_chatglm3
+from llmbase.main.common.god import cosmos
+from llmbase.main.common.tool.logger import logger
+from llmbase.main.llm.chatglm3.model import (EmbeddingRequest, CompletionUsage, ModelCard, ModelList,
+                                             ChatCompletionRequest, FunctionCallResponse, ChatMessage,
+                                             ChatCompletionResponseChoice, UsageInfo, ChatCompletionResponse,
+                                             ChatCompletionResponseStreamChoice, DeltaMessage)
+from llmbase.main.llm.chatglm3.utils import process_response, generate_chatglm3, generate_stream_chatglm3
 
 router = APIRouter(prefix="/v1")
 

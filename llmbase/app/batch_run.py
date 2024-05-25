@@ -1,7 +1,7 @@
 # import config   # 服务器运行
 import uvicorn
-from core.main import get_asgi_app, cosmos
-from core.main.app import config
+from llmbase.main import get_asgi_app, cosmos
+from llmbase.app import config
 
 app = get_asgi_app(config=config.Config)
 
