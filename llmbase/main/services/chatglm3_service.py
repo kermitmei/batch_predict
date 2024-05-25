@@ -1,9 +1,12 @@
 import time
+from typing import Optional, Union
 
 import tiktoken
 from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
+from transformers import LogitsProcessorList
 
+from llmbase.main.common.dto.req.prompt_batch import PromptBatchDTO
 from llmbase.main.common.god import cosmos
 from llmbase.main.common.tool.logger import logger
 from llmbase.main.llm.chatglm3.model import (EmbeddingRequest, CompletionUsage, ModelCard, ModelList,
@@ -354,3 +357,51 @@ class ChatGLM3Service:
         :return:
         """
         return value and 'get_' in value
+
+    @staticmethod
+    def batch_predict(prompt_list: list[str]) -> str:
+        pass
+
+    @staticmethod
+    def batch(
+            model,
+            tokenizer,
+            prompts: Union[str, list[str]],
+            max_length: int = 8192,
+            num_beams: int = 1,
+            do_sample: bool = True,
+            top_p: float = 0.8,
+            temperature: float = 0.8,
+            logits_processor: Optional[LogitsProcessorList] = None,
+    ):
+        if logits_processor is None:
+            logits_processor = LogitsProcessorList()
+        tokenizer.encode_special_tokens = True
+        if isinstance(prompts, str):
+            prompts = [prompts]
+        batched_inputs = tokenizer(prompts, return_tensors="pt", padding="longest")
+        batched_inputs = batched_inputs.to(model.device)
+
+        eos_token_id = [
+            tokenizer.eos_token_id,
+            tokenizer.get_command("<|user|>"),
+            tokenizer.get_command("<|assistant|>"),
+        ]
+        gen_kwargs = {
+            "max_length": max_length,
+            "num_beams": num_beams,
+            "do_sample": do_sample,
+            "top_p": top_p,
+            "temperature": temperature,
+            "logits_processor": logits_processor,
+            "eos_token_id": eos_token_id,
+        }
+        batched_outputs = model.generate(**batched_inputs, **gen_kwargs)
+        batched_response = []
+        for input_ids, output_ids in zip(batched_inputs.input_ids, batched_outputs):
+            decoded_text = tokenizer.decode(output_ids[len(input_ids):])
+            batched_response.append(decoded_text.strip())
+        return batched_response
+
+
+
