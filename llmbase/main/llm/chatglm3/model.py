@@ -66,9 +66,12 @@ class UsageInfo(BaseModel):
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: List[ChatMessage]
+    do_sample: Optional[bool] = True
     temperature: Optional[float] = 0.8
     top_p: Optional[float] = 0.8
     max_tokens: Optional[int] = None
+    max_length: Optional[int] = None
+    num_beams:Optional[int] = 1
     stream: Optional[bool] = False
     tools: Optional[Union[dict, List[dict]]] = None
     repetition_penalty: Optional[float] = 1.1

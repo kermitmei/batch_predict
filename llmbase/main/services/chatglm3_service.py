@@ -359,28 +359,14 @@ class ChatGLM3Service:
         return value and 'get_' in value
 
     @staticmethod
-    def batch_predict(prompt_list: list[str]) -> str:
-        pass
-
-    @staticmethod
-    def batch(
-            model,
-            tokenizer,
-            prompts: Union[str, list[str]],
-            max_length: int = 8192,
-            num_beams: int = 1,
-            do_sample: bool = True,
-            top_p: float = 0.8,
-            temperature: float = 0.8,
-            logits_processor: Optional[LogitsProcessorList] = None,
-    ):
-        if logits_processor is None:
-            logits_processor = LogitsProcessorList()
+    def create_batch_completion(request: ChatCompletionRequest):
+        model = cosmos.llm.model
+        tokenizer = cosmos.llm.tokenizer
         tokenizer.encode_special_tokens = True
+
+        prompts = request.messages
         if isinstance(prompts, str):
             prompts = [prompts]
-        batched_inputs = tokenizer(prompts, return_tensors="pt", padding="longest")
-        batched_inputs = batched_inputs.to(model.device)
 
         eos_token_id = [
             tokenizer.eos_token_id,
@@ -388,20 +374,26 @@ class ChatGLM3Service:
             tokenizer.get_command("<|assistant|>"),
         ]
         gen_kwargs = {
-            "max_length": max_length,
-            "num_beams": num_beams,
-            "do_sample": do_sample,
-            "top_p": top_p,
-            "temperature": temperature,
-            "logits_processor": logits_processor,
+            "max_length": request.max_length or 2048,
+            "max_tokens": request.max_tokens or 1024,
+            "num_beams": request.num_beams,
+            "do_sample": request.do_sample,
+            "top_p": request.top_p,
+            "temperature": request.temperature,
+            "logits_processor": LogitsProcessorList(),
             "eos_token_id": eos_token_id,
+            "echo": False,
+            "stream": request.stream,
+            "repetition_penalty": request.repetition_penalty,
+            "tools": request.tools,
         }
+
+        batched_inputs = tokenizer(prompts, return_tensors="pt", padding="longest")
+        batched_inputs = batched_inputs.to(model.device)
+
         batched_outputs = model.generate(**batched_inputs, **gen_kwargs)
         batched_response = []
         for input_ids, output_ids in zip(batched_inputs.input_ids, batched_outputs):
             decoded_text = tokenizer.decode(output_ids[len(input_ids):])
             batched_response.append(decoded_text.strip())
         return batched_response
-
-
-
