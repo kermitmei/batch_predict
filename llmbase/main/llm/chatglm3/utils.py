@@ -4,7 +4,6 @@ import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 from transformers.generation.logits_process import LogitsProcessor
 from typing import Union, Tuple
-from mindformers import ChatGLM3Tokenizer
 
 
 class InvalidScoreLogitsProcessor(LogitsProcessor):
@@ -45,7 +44,7 @@ def process_response(output: str, use_tool: bool = False) -> Union[str, dict]:
 
 
 @torch.inference_mode()
-def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: ChatGLM3Tokenizer, params: dict):
+def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, params: dict):
     messages = params["messages"]
     tools = params["tools"]
     temperature = float(params.get("temperature", 1.0))
