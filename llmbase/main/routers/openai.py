@@ -25,4 +25,6 @@ def models():
 
 @router.post("/chat/completions", response_model=ChatCompletionResponse)
 def create_chat_completion(request: ChatCompletionRequest):
+    if len(request.messages) > 1:
+        return ChatGLM3Service.create_batch_completion(request)
     return ChatGLM3Service.create_chat_completion(request)

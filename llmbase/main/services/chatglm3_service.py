@@ -368,11 +368,10 @@ class ChatGLM3Service:
         if isinstance(prompts, str):
             prompts = [prompts]
 
-        eos_token_id = [
-            tokenizer.eos_token_id,
-            tokenizer.get_command("<|user|>"),
-            tokenizer.get_command("<|assistant|>"),
-        ]
+        eos_token_id = [tokenizer.eos_token_id]
+        if request.eos_token_ids:
+            for _eti in request.eos_token_ids:
+                eos_token_id.append(tokenizer.get_command(_eti))
         gen_kwargs = {
             "max_length": request.max_length or 2048,
             "max_tokens": request.max_tokens or 1024,

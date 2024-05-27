@@ -71,10 +71,11 @@ class ChatCompletionRequest(BaseModel):
     top_p: Optional[float] = 0.8
     max_tokens: Optional[int] = None
     max_length: Optional[int] = None
-    num_beams:Optional[int] = 1
+    num_beams: Optional[int] = 1
     stream: Optional[bool] = False
     tools: Optional[Union[dict, List[dict]]] = None
     repetition_penalty: Optional[float] = 1.1
+    eos_token_ids: Optional[List[str]] = None
 
 
 class ChatCompletionResponseChoice(BaseModel):
