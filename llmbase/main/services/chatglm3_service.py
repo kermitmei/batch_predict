@@ -364,14 +364,18 @@ class ChatGLM3Service:
         tokenizer = cosmos.llm.tokenizer
         tokenizer.encode_special_tokens = True
 
-        prompts = request.messages
-        if isinstance(prompts, str):
-            prompts = [prompts]
+        eos_start = '<-|user|->'
+        eos_end = '<-|assistant|->'
+        eos_token_id = [
+            tokenizer.eos_token_id,
+            tokenizer.get_command(eos_start),
+            tokenizer.get_command(eos_end)
+        ]
 
-        eos_token_id = [tokenizer.eos_token_id]
-        if request.eos_token_ids:
-            for _eti in request.eos_token_ids:
-                eos_token_id.append(tokenizer.get_command(_eti))
+        prompts = []
+        for msg in request.messages:
+            prompts.append(eos_start + '\n' + msg.content + '\n' + eos_end)
+
         gen_kwargs = {
             "max_length": request.max_length or 2048,
             "max_tokens": request.max_tokens or 1024,
