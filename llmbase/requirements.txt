@@ -3,11 +3,14 @@ ifaddr==0.2.0
 nacos-sdk-python==0.1.14
 peft==0.11.1
 psutil==5.9.8
+pydantic==2.7.1
 pynvml==11.5.0
-sentencepiece==0.1.99
 sentence-transformers==2.7.0
+sentencepiece==0.1.99
+setuptools==69.5.1
 shortuuid==1.0.11
 sse-starlette==1.8.2
+starlette==0.37.2
 tiktoken==0.7.0
 torch==2.3.0
 transformers==4.35.2
