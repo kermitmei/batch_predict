@@ -364,8 +364,8 @@ class ChatGLM3Service:
         tokenizer = cosmos.llm.tokenizer
         tokenizer.encode_special_tokens = True
 
-        eos_start = '<-|user|->'
-        eos_end = '<-|assistant|->'
+        eos_start = '<|user|>'
+        eos_end = '<|assistant|>'
         eos_token_id = [
             tokenizer.eos_token_id,
             tokenizer.get_command(eos_start),
@@ -378,15 +378,12 @@ class ChatGLM3Service:
 
         gen_kwargs = {
             "max_length": request.max_length or 2048,
-            "max_tokens": request.max_tokens or 1024,
             "num_beams": request.num_beams,
-            "do_sample": request.do_sample,
+            "do_sample": True,
             "top_p": request.top_p,
             "temperature": request.temperature,
             "logits_processor": LogitsProcessorList(),
             "eos_token_id": eos_token_id,
-            "echo": False,
-            "stream": request.stream,
             "repetition_penalty": request.repetition_penalty,
             "tools": request.tools,
         }
@@ -395,8 +392,29 @@ class ChatGLM3Service:
         batched_inputs = batched_inputs.to(model.device)
 
         batched_outputs = model.generate(**batched_inputs, **gen_kwargs)
-        batched_response = []
+
+        _choices = []
         for input_ids, output_ids in zip(batched_inputs.input_ids, batched_outputs):
             decoded_text = tokenizer.decode(output_ids[len(input_ids):])
-            batched_response.append(decoded_text.strip())
-        return batched_response
+            message = ChatMessage(
+                role="assistant",
+                content=decoded_text.strip(),
+                function_call=None
+            )
+
+            choice_data = ChatCompletionResponseChoice(
+                index=0,
+                message=message,
+                finish_reason='stop',
+            )
+            _choices.append(choice_data)
+
+        return ChatCompletionResponse(
+            model=request.model,
+            id="",  # for open_source model, id is empty
+            choices=_choices,
+            object="chat.completion",
+            usage=None
+        )
+        
+
