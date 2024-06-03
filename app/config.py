@@ -3,7 +3,7 @@ from starlette.datastructures import Secret
 
 
 class Config(StarletteConfig):
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     """
     CRITICAL = 50
@@ -16,6 +16,7 @@ class Config(StarletteConfig):
     NOTSET = 0
     """
     LOGGER_LEVEL = 10
+    LOGGER_PATH = '/tmp/guoxin'
 
     MAX_CONNECTIONS_COUNT: int = 10
     MIN_CONNECTIONS_COUNT: int = 10
@@ -32,7 +33,7 @@ class Config(StarletteConfig):
     # LLM配置
     LLM_CONFIG = {
         'class': 'ChatGLM3',
-        'pretrained_model_path': '/var/guoxin2023/fastapi/app/llm/chatglm3-6b-32k',
+        'pretrained_model_path': '/var/llm/chatglm3-6b-32k',
         'cuda_devices': '0'
     }
 
@@ -43,7 +44,7 @@ class Config(StarletteConfig):
         'namespace': 'public',
         'service': {
             'name': 'chatglm3-6b-32k',
-            'ip': '192.168.1.45',
+            'ip': '192.168.31.136',
             'port': 8000,
             'cluster_name': None,
             'weight': 1.0,

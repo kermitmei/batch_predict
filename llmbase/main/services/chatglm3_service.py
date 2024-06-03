@@ -371,7 +371,7 @@ class ChatGLM3Service:
             tokenizer.get_command(eos_start),
             tokenizer.get_command(eos_end)
         ]
-
+        logger.debug(f"==== messages ====\n{request.messages}")
         prompts = []
         for msg in request.messages:
             prompts.append(eos_start + '\n' + msg.content + '\n' + eos_end)
@@ -408,6 +408,8 @@ class ChatGLM3Service:
                 finish_reason='stop',
             )
             _choices.append(choice_data)
+
+        logger.debug(f"==== choices ====\n{_choices}")
 
         return ChatCompletionResponse(
             model=request.model,

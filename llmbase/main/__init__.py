@@ -23,7 +23,7 @@ def get_asgi_app(config) -> FastAPI:
     # 保存全局配置到全局变量
     cosmos.config = config
     # 日志
-    init_logger(debug=config.DEBUG, package=__package__, level=config.LOGGER_LEVEL)
+    init_logger(debug=config.DEBUG, package=__package__, level=config.LOGGER_LEVEL, logger_path=config.LOGGER_PATH)
 
     logger.debug('这是debug消息')
 
