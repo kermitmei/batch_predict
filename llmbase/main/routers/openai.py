@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response
 
 from llmbase.main.llm.chatglm3.model import (EmbeddingResponse, EmbeddingRequest, ModelList,
                                              ChatCompletionResponse, ChatCompletionRequest)
-from llmbase.main.services.chatglm3_service import ChatGLM3Service
+from llmbase.main.services.chatglm4_service import ChatGLM4Service
 
 router = APIRouter(prefix="/v1")
 
@@ -15,16 +15,16 @@ async def health() -> Response:
 
 @router.post("/embeddings", response_model=EmbeddingResponse)
 def get_embeddings(request: EmbeddingRequest):
-    return ChatGLM3Service.get_embeddings(request)
+    return ChatGLM4Service.get_embeddings(request)
 
 
 @router.get("/models", response_model=ModelList)
 def models():
-    return ChatGLM3Service.models()
+    return ChatGLM4Service.models()
 
 
 @router.post("/chat/completions", response_model=ChatCompletionResponse)
 def create_chat_completion(request: ChatCompletionRequest):
     if len(request.messages) > 1:
-        return ChatGLM3Service.create_batch_completion(request)
-    return ChatGLM3Service.create_chat_completion(request)
+        return ChatGLM4Service.create_batch_completion(request)
+    return ChatGLM4Service.create_chat_completion(request)
