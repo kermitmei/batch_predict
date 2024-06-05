@@ -32,8 +32,8 @@ class Config(StarletteConfig):
 
     # LLM配置
     LLM_CONFIG = {
-        'class': 'ChatGLM3',
-        'pretrained_model_path': '/var/llm/chatglm3-6b-32k',
+        'class': 'ChatGLM4',
+        'pretrained_model_path': '/var/llm/glm-4-9b-chat',
         'cuda_devices': '0'
     }
 
@@ -43,7 +43,7 @@ class Config(StarletteConfig):
         'port': 8848,
         'namespace': 'public',
         'service': {
-            'name': 'chatglm3-6b-32k',
+            'name': 'glm-4-9b-chat',
             'ip': '192.168.31.136',
             'port': 8000,
             'cluster_name': None,
