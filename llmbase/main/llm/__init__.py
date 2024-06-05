@@ -14,5 +14,7 @@ class LLM(object):
         cls = getattr(module, llm_config.get('class'))
         return cls
 
+
 from llmbase.main.llm.chatglm3 import ChatGLM3
+from llmbase.main.llm.chatglm4 import ChatGLM4
 from llmbase.main.llm.internlm_chat_20b import InternLMChat20B
